@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai"
 import type { DiscoveryData, StrategicPlan } from "../types"
+import { validateDiscoveryData } from "./ethical-filter"
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string })
 
@@ -139,6 +140,13 @@ const buildPrompt = (data: DiscoveryData): string => {
 export const generateStrategicPlan = async (
   data: DiscoveryData
 ): Promise<StrategicPlan> => {
+  // Validación ética adicional como medida de seguridad
+  const ethicalCheck = validateDiscoveryData(data)
+
+  if (!ethicalCheck.isAllowed) {
+    throw new Error(`Contenido no permitido: ${ethicalCheck.reason}`)
+  }
+
   const prompt = buildPrompt(data)
 
   try {

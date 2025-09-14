@@ -1,4 +1,9 @@
 import React, { useState } from "react"
+import { Button } from "./ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
+import { Badge } from "./ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import type {
   StrategicPlan,
   AnalysisSection,
@@ -14,7 +19,7 @@ interface ResultsDisplayProps {
 const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className={`h-5 w-5 ${className}`}
+    className={`h-4 w-4 ${className || ""}`}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -28,22 +33,24 @@ const SectionCard: React.FC<{
   section: AnalysisSection
   icon: React.ReactNode
 }> = ({ section, icon }) => (
-  <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-    <div className="flex items-center mb-4">
-      {icon}
-      <h3 className="text-xl font-bold ml-3 text-gray-900 dark:text-white">
-        {section.title}
-      </h3>
-    </div>
-    <ul className="space-y-3">
-      {section.points.map((point, index) => (
-        <li key={index} className="flex items-start">
-          <CheckIcon className="text-green-500 flex-shrink-0 mt-1 mr-2" />
-          <span className="text-gray-700 dark:text-gray-300">{point}</span>
-        </li>
-      ))}
-    </ul>
-  </div>
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center">
+        {icon}
+        <span className="ml-3">{section.title}</span>
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <ul className="space-y-3">
+        {section.points.map((point, index) => (
+          <li key={index} className="flex items-start">
+            <CheckIcon className="text-green-500 flex-shrink-0 mt-1 mr-2" />
+            <span className="text-muted-foreground">{point}</span>
+          </li>
+        ))}
+      </ul>
+    </CardContent>
+  </Card>
 )
 
 const RoadmapAccordion: React.FC<{ initiative: StrategicInitiative }> = ({
@@ -53,51 +60,52 @@ const RoadmapAccordion: React.FC<{ initiative: StrategicInitiative }> = ({
   const { details } = initiative
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-      >
-        <div>
-          <h4 className="font-bold text-lg text-left text-gray-800 dark:text-gray-100">
-            {initiative.title}
-          </h4>
-          <p className="text-sm text-left text-gray-600 dark:text-gray-400 mt-1">
-            {initiative.description}
-          </p>
-        </div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={`h-6 w-6 transform transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-      {isOpen && (
-        <div className="p-6 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <DetailItem title="Iniciativa" content={details.initiative} />
-            <DetailItem title="Cronograma" content={details.timeline} />
-            <DetailItem title="Responsable Sugerido" content={details.owner} />
-            <DetailList
-              title="Indicadores Clave de Rendimiento (KPIs)"
-              items={details.kpis}
-            />
-            <DetailList title="Recursos Necesarios" items={details.resources} />
-          </div>
-        </div>
-      )}
-    </div>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <Card>
+        <CollapsibleTrigger asChild>
+          <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
+            <div className="flex justify-between items-center w-full">
+              <div className="text-left">
+                <CardTitle className="text-lg">{initiative.title}</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {initiative.description}
+                </p>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`h-6 w-6 transform transition-transform duration-300 ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </CardHeader>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <DetailItem title="Iniciativa" content={details.initiative} />
+              <DetailItem title="Cronograma" content={details.timeline} />
+              <DetailItem title="Responsable Sugerido" content={details.owner} />
+              <DetailList
+                title="Indicadores Clave de Rendimiento (KPIs)"
+                items={details.kpis}
+              />
+              <DetailList title="Recursos Necesarios" items={details.resources} />
+            </div>
+          </CardContent>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible>
   )
 }
 
@@ -106,10 +114,10 @@ const DetailItem: React.FC<{ title: string; content: string }> = ({
   content,
 }) => (
   <div>
-    <h5 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+    <h5 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
       {title}
     </h5>
-    <p className="mt-1 text-gray-800 dark:text-gray-200">{content}</p>
+    <p className="mt-1 text-foreground">{content}</p>
   </div>
 )
 
@@ -118,12 +126,12 @@ const DetailList: React.FC<{ title: string; items: string[] }> = ({
   items,
 }) => (
   <div>
-    <h5 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+    <h5 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
       {title}
     </h5>
     <ul className="mt-1 space-y-1 list-disc list-inside">
       {items.map((item, i) => (
-        <li key={i} className="text-gray-800 dark:text-gray-200">
+        <li key={i} className="text-foreground">
           {item}
         </li>
       ))}
@@ -135,10 +143,6 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
   plan,
   onReset,
 }) => {
-  const [activeTab, setActiveTab] = useState<
-    "quickWins" | "strategicInitiatives" | "transformationalBets"
-  >("quickWins")
-
   const tabs = [
     {
       id: "quickWins",
@@ -161,7 +165,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
     <div className="space-y-12">
       {/* Analysis Section */}
       <div>
-        <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-900 dark:text-white">
+        <h2 className="text-3xl font-bold text-center mb-8">
           FASE 2: ANÁLISIS
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -246,57 +250,46 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
 
       {/* Strategy & Execution Section */}
       <div>
-        <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-900 dark:text-white">
+        <h2 className="text-3xl font-bold text-center mb-8">
           FASE 3 Y 4: ESTRATEGIA Y EJECUCIÓN
         </h2>
-        <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-          <div className="border-b border-gray-200 dark:border-gray-700">
-            <nav
-              className="-mb-px flex space-x-2 sm:space-x-4 px-2"
-              aria-label="Tabs"
-            >
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`whitespace-nowrap py-4 px-1 sm:px-4 border-b-2 font-medium text-sm transition-colors
-                            ${
-                              activeTab === tab.id
-                                ? "border-blue-500 text-blue-600 dark:text-blue-400"
-                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-500"
-                            }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {tabs
-                .find((t) => t.id === activeTab)
-                ?.data.map((initiative, index) => (
+        <Tabs defaultValue="quickWins">
+          <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 h-auto">
+            {tabs.map((tab) => (
+              <TabsTrigger 
+                key={tab.id} 
+                value={tab.id}
+                className="text-sm font-medium p-3"
+              >
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {tabs.map((tab) => (
+            <TabsContent key={tab.id} value={tab.id} className="mt-6">
+              <div className="space-y-4">
+                {tab.data.map((initiative, index) => (
                   <RoadmapAccordion key={index} initiative={initiative} />
                 ))}
-            </div>
-          </div>
-        </div>
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
       </div>
 
       {/* Conclusion */}
-      <div className="text-center p-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-        <p className="text-xl italic font-semibold text-blue-800 dark:text-blue-200">
-          {plan.conclusion}
-        </p>
-      </div>
+      <Card className="bg-primary/5 border-primary/20">
+        <CardContent className="p-8 text-center">
+          <p className="text-xl italic font-semibold text-primary">
+            {plan.conclusion}
+          </p>
+        </CardContent>
+      </Card>
 
       <div className="text-center mt-12">
-        <button
-          onClick={onReset}
-          className="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-        >
+        <Button onClick={onReset} variant="outline" size="lg">
           Iniciar un Nuevo Análisis
-        </button>
+        </Button>
       </div>
     </div>
   )
