@@ -14,6 +14,17 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": path.resolve(__dirname, "."),
       },
+      extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    },
+    build: {
+      rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, 'index.html')
+        },
+      },
+    },
+    esbuild: {
+      logOverride: { 'this-is-undefined-in-esm': 'silent' }
     },
   }
 })
