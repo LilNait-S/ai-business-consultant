@@ -15,7 +15,6 @@ import { UserProfile } from "./components/user-profile"
 import { AuthProvider, useAuth } from "./contexts/auth-context"
 import { generateStrategicPlan } from "./services/gemini-service"
 import type { AppState, DiscoveryData, SavedStrategy, ViewMode } from "./types"
-import "./src/index.css"
 import { ThemeProvider } from "./components/theme-provider"
 
 function AppContent() {
