@@ -16,7 +16,7 @@ import { AuthProvider, useAuth } from "./contexts/auth-context"
 import { generateStrategicPlan } from "./services/gemini-service"
 import type { AppState, DiscoveryData, SavedStrategy, ViewMode } from "./types"
 import { ThemeProvider } from "./components/theme-provider"
-import { Header } from "./components/header"
+import { Header } from "./components/headerr"
 
 function AppContent() {
   const { user, isAuthenticated, loading: authLoading, signOut } = useAuth()
