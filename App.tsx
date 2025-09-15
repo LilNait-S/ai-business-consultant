@@ -345,7 +345,7 @@ function AppContent() {
   )
 }
 
-const App: React.FC = () => {
+export default function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AuthProvider>
@@ -354,5 +354,3 @@ const App: React.FC = () => {
     </ThemeProvider>
   )
 }
-
-export default App
