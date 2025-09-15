@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { AuthModal, UserMenu } from "./components/auth"
 import { DiscoveryForm } from "./components/discovery-form"
-import { Header } from "./components/header"
+
 import { LoadingDisplay } from "./components/loading-display"
 import { ResultsDisplay } from "./components/results-display"
 import { SaveStrategyModal } from "./components/save-strategy-modal"
@@ -16,6 +16,7 @@ import { AuthProvider, useAuth } from "./contexts/auth-context"
 import { generateStrategicPlan } from "./services/gemini-service"
 import type { AppState, DiscoveryData, SavedStrategy, ViewMode } from "./types"
 import { ThemeProvider } from "./components/theme-provider"
+import { Header } from "./components/header"
 
 function AppContent() {
   const { user, isAuthenticated, loading: authLoading, signOut } = useAuth()
