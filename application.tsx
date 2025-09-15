@@ -345,7 +345,7 @@ function AppContent() {
   )
 }
 
-export default function App() {
+export default function Application() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AuthProvider>
